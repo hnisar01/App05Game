@@ -37,12 +37,8 @@ namespace App05MonoGame
         private SpriteFont calibriFont;
 
         private Texture2D backgroundImage;
-        private SoundEffect flameEffect;
 
         private readonly CoinsController coinsController;
-
-        private PlayerSprite shipSprite;
-        private Sprite asteroidSprite;
 
         private AnimatedPlayer playerSprite;
         private AnimatedSprite enemySprite;
@@ -76,6 +72,11 @@ namespace App05MonoGame
 
             graphicsDevice = graphicsManager.GraphicsDevice;
 
+            // todo need moving to the player and the player update needs altering
+            //so that when it collides with coin score increases and when player moves
+            //health decrease by 0.1
+            //make player controller
+
             score = 0;
             health = 100;
 
@@ -96,7 +97,6 @@ namespace App05MonoGame
 
             SoundController.LoadContent(Content);
             SoundController.PlaySong("Adventure");
-            flameEffect = SoundController.GetSoundEffect("Flame");
 
             // Load Fonts
 
@@ -113,11 +113,6 @@ namespace App05MonoGame
 
             restartButton.click += RestartButton_click;
 
-            // suitable for asteroids type game
-
-            SetupSpaceShip();
-            SetupAsteroid();
-
             // animated sprites suitable for pacman type game
 
             SetupAnimatedPlayer();
@@ -133,45 +128,6 @@ namespace App05MonoGame
             
             Exit();
         }
-
-        /// <summary>
-        /// This is a single image sprite that rotates
-        /// and move at a constant speed in a fixed direction
-        /// </summary>
-        private void SetupAsteroid()
-        {
-            Texture2D asteroid = Content.Load<Texture2D>(
-               "Actors/Stones2Filled_01");
-
-            asteroidSprite = new Sprite(asteroid, 1200, 500)
-            {
-                Direction = new Vector2(-1, 0),
-                Speed = 100,
-
-                Rotation = MathHelper.ToRadians(3),
-                RotationSpeed = 2f,
-            };
-
-    }
-
-        /// <summary>
-        /// This is a Sprite that can be controlled by a
-        /// player using Rotate Left = A, Rotate Right = D, 
-        /// Forward = Space
-        /// </summary>
-        private void SetupSpaceShip()
-        {
-            Texture2D ship = Content.Load<Texture2D>(
-               "Actors/GreenShip");
-
-            shipSprite = new PlayerSprite(ship, 200, 500)
-            {
-                Direction = new Vector2(1, 0),
-                Speed = 200,
-                DirectionControl = DirectionControl.Rotational
-            };
-    }
-
 
         /// <summary>
         /// This is a Sprite with four animations for the four
@@ -247,24 +203,13 @@ namespace App05MonoGame
 
             restartButton.Update(gameTime);
 
-            // Update Asteroids
-
-            shipSprite.Update(gameTime);
-            asteroidSprite.Update(gameTime);
-
-            if (shipSprite.HasCollided(asteroidSprite) && shipSprite.IsAlive)
-            {
-                flameEffect.Play();
-
-                shipSprite.IsActive = false;
-                shipSprite.IsAlive = false;
-                shipSprite.IsVisible = false;
-            }
-
             // Update Chase Game
 
             playerSprite.Update(gameTime);
             enemySprite.Update(gameTime);
+
+            // todo when enemy gets to the left hand side reposition the enemy up or down
+            //reposition it so it moves right.
 
             if (playerSprite.HasCollided(enemySprite))
             {
@@ -293,11 +238,6 @@ namespace App05MonoGame
             spriteBatch.Draw(backgroundImage, Vector2.Zero, Color.White);
 
             restartButton.Draw(spriteBatch);
-
-            // Draw asteroids game
-
-            shipSprite.Draw(spriteBatch);
-            asteroidSprite.Draw(spriteBatch);
 
             // Draw Chase game
 

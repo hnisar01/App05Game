@@ -68,6 +68,11 @@ namespace App05MonoGame.Controllers
             }           
         }
 
+        /// <summary>
+        /// need to set a timer going 2 seconds 
+        /// decrease timer until it 0 and that 0 create new coin
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
             foreach(AnimatedSprite coin in Coins)
