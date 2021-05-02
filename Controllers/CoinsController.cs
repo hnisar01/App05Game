@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 
@@ -24,9 +25,19 @@ namespace App05MonoGame.Controllers
     /// </authors>
     public class CoinsController
     {
+        private AnimatedSprite coinTemplate;
+
+        private Animation animation;
+
+        private Random generator = new Random();
+
         private SoundEffect coinEffect;
 
-        private readonly List<AnimatedSprite> Coins;        
+        private readonly List<AnimatedSprite> Coins; 
+        
+        private float maxTime = 2f;
+
+        private float timer;
 
         public CoinsController()
         {
@@ -39,7 +50,7 @@ namespace App05MonoGame.Controllers
         public void CreateCoin(GraphicsDevice graphics, Texture2D coinSheet)
         {
             coinEffect = SoundController.GetSoundEffect("Coin");
-            Animation animation = new Animation("coin", coinSheet, 8);
+            animation = new Animation("coin", coinSheet, 8);
 
             AnimatedSprite coin = new AnimatedSprite()
             {
@@ -50,6 +61,7 @@ namespace App05MonoGame.Controllers
                 Speed = 0,
             };
 
+            coinTemplate = coin;
             Coins.Add(coin);
         }
 
@@ -78,6 +90,24 @@ namespace App05MonoGame.Controllers
             foreach(AnimatedSprite coin in Coins)
             {
                 coin.Update(gameTime);
+            }
+            timer = timer - (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (timer <= 0) 
+            {
+                timer = maxTime;
+                AnimatedSprite coin = new AnimatedSprite();
+                coin.Animation = animation;
+                coin.Image = coinTemplate.Image;
+                coin.Speed = coinTemplate.Speed;
+                coin.Scale = coinTemplate.Scale;
+
+                int x = generator.Next(800) + 100;
+                int y = generator.Next(500) + 100;
+
+                coin.Position = new Vector2(x,y);
+
+                Coins.Add(coin);
+
             }
         }
 
