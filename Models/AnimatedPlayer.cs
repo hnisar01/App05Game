@@ -16,6 +16,9 @@ namespace App05MonoGame.Models
     {
         public bool CanWalk { get; set; }
 
+        public int Score { get; set; }
+        public int Health { get; set; }
+
         private readonly MovementController movement;
 
         public AnimatedPlayer() : base()

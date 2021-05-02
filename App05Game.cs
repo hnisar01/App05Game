@@ -45,8 +45,7 @@ namespace App05MonoGame
 
         private Button restartButton;
 
-        private int score;
-        private int health;
+        
 
         #endregion
 
@@ -77,9 +76,7 @@ namespace App05MonoGame
             //health decrease by 0.1
             //make player controller
 
-            score = 0;
-            health = 100;
-
+            
             base.Initialize();
         }
 
@@ -117,6 +114,10 @@ namespace App05MonoGame
 
             SetupAnimatedPlayer();
             SetupEnemy();
+
+            playerSprite.Score = 0;
+            playerSprite.Health = 100;
+
 
             Texture2D coinSheet = Content.Load<Texture2D>("Actors/coin_copper");
             coinsController.CreateCoin(graphicsDevice, coinSheet);
@@ -259,7 +260,7 @@ namespace App05MonoGame
         public void DrawGameStatus(SpriteBatch spriteBatch)
         {
             Vector2 topLeft = new Vector2(4, 4);
-            string status = $"Score = {score:##0}";
+            string status = $"Score = {playerSprite.Score:##0}";
 
             spriteBatch.DrawString(arialFont, status, topLeft, Color.White);
 
@@ -268,7 +269,7 @@ namespace App05MonoGame
             Vector2 topCentre = new Vector2((HD_Width/2 - gameSize.X/2), 4);
             spriteBatch.DrawString(arialFont, game, topCentre, Color.White);
 
-            string healthText = $"Health = {health}%";
+            string healthText = $"Health = {playerSprite.Health}%";
             Vector2 healthSize = arialFont.MeasureString(healthText);
             Vector2 topRight = new Vector2(HD_Width - (healthSize.X + 4), 4);
             spriteBatch.DrawString(arialFont, healthText, topRight, Color.White);

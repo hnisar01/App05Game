@@ -71,6 +71,7 @@ namespace App05MonoGame.Controllers
             {
                 if (coin.HasCollided(player) && coin.IsAlive)
                 {
+                    player.Score += 5; 
                     coinEffect.Play();
 
                     coin.IsActive = false;
