@@ -7,6 +7,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace App05MonoGame
 {
+    public enum GameStates
+    {
+        starting, playing, lost, won
+    }
     /// <summary>
     /// This game creates a variety of sprites as an example.  
     /// There is no game to play yet. The spaceShip and the 
@@ -45,6 +49,8 @@ namespace App05MonoGame
 
         private Button restartButton;
 
+        private GameStates gameState; 
+
         
 
         #endregion
@@ -56,6 +62,7 @@ namespace App05MonoGame
             IsMouseVisible = true;
 
             coinsController = new CoinsController();
+            gameState = GameStates.starting;
         }
 
         /// <summary>
@@ -199,6 +206,9 @@ namespace App05MonoGame
         /// </param>
         protected override void Update(GameTime gameTime)
         {
+            if (gameState == GameStates.starting)
+                gameState = GameStates.playing;
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || 
                 Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
@@ -217,10 +227,14 @@ namespace App05MonoGame
                 playerSprite.IsActive = false;
                 playerSprite.IsAlive = false;
                 enemySprite.IsActive = false;
+
+                gameState = GameStates.lost;
             }
 
             coinsController.Update(gameTime);
             coinsController.HasCollided(playerSprite);
+
+            if (playerSprite.Score == 100) gameState = GameStates.won;
 
             base.Update(gameTime);
         }
@@ -245,6 +259,14 @@ namespace App05MonoGame
             playerSprite.Draw(spriteBatch);
             coinsController.Draw(spriteBatch);
             enemySprite.Draw(spriteBatch);
+
+            if (gameState == GameStates.lost)
+                spriteBatch.DrawString(arialFont, "you have lost the game", 
+                    new Vector2(100,400),Color.White);
+            else if (gameState == GameStates.won)
+                spriteBatch.DrawString(arialFont, "you have won the game",
+                    new Vector2(100, 400), Color.White);
+
 
             DrawGameStatus(spriteBatch);
             DrawGameFooter(spriteBatch);
