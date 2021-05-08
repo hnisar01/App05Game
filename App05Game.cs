@@ -227,7 +227,6 @@ namespace App05MonoGame
                 playerSprite.IsActive = false;
                 playerSprite.IsAlive = false;
                 enemySprite.IsActive = false;
-
                 gameState = GameStates.lost;
             }
 
